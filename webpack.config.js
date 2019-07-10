@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const env = process.env.NODE_ENV;
 module.exports = {
     entry: './src/index.js',
     output: {
@@ -23,6 +23,7 @@ module.exports = {
 
           })
     ],
+    mode: env, //'development' // production
     devtool: 'cheap-module-eval-source-map',
     module:{
         rules: [
@@ -39,7 +40,16 @@ module.exports = {
                         use: [
                          'file-loader'
                          ]
-            }
+            },
+            {
+                test: /.js$/,
+                exclude: path.resolve('node_modules'),
+                loader: 'babel-loader',
+                options: {
+                  presets: ['env'], // babel-preset-env
+                  plugins: ['syntax-dynamic-import'],
+                },
+              },
         ]
     }
 };
